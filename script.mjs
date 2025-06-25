@@ -6,10 +6,7 @@
 
 
 import { getUserIDs, getListenEvents, getSong } from './data.mjs';
-
-// Get references to DOM elements
-const userSelect = document.getElementById('user-select');
-const resultsDiv = document.getElementById('results');
+import {userSelect,resultsDiv} from './domelement.mjs';
 
 
 // Populates the user selection dropdown with available user IDs.
@@ -19,11 +16,36 @@ function populateUserDropdown() {
     userIDs.forEach(userID => {
         const option = document.createElement('option');
         option.value = userID;
-        option.textContent = `User ${userID.split('-')[1]}`; 
+        option.textContent = `User ${userID}`; 
         userSelect.appendChild(option);
     });
 }
 
 populateUserDropdown();
+
+// populate result for the select user
+
+function renderResults(userID) {
+    // Clear previous results
+    resultsDiv.innerHTML = '';
+
+    const listenEvents = getListenEvents(userID);
+
+    if (listenEvents.length === 0) {
+        resultsDiv.innerHTML = '<p>This user didn’t listen to any songs.</p>';
+        return;
+    }
+}
+
+
+// Attach event listener to the dropdown
+userSelect.addEventListener('change', () => {
+    const selectedUserID = userSelect.value;
+    renderResults(selectedUserID);
+    
+    if (!selectedUserID) return;
+        
+    
+});
 
 
