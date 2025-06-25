@@ -6,10 +6,7 @@
 
 
 import { getUserIDs, getListenEvents, getSong } from './data.mjs';
-
-// Get references to DOM elements
-const userSelect = document.getElementById('user-select');
-const resultsDiv = document.getElementById('results');
+import {userSelect,resultsDiv} from './domelement.mjs';
 
 
 // Populates the user selection dropdown with available user IDs.
