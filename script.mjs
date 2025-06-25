@@ -19,7 +19,7 @@ function populateUserDropdown() {
     userIDs.forEach(userID => {
         const option = document.createElement('option');
         option.value = userID;
-        option.textContent = `User ${userID.split('-')[1]}`; 
+        option.textContent = `User ${userID}`; 
         userSelect.appendChild(option);
     });
 }
