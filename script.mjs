@@ -7,7 +7,7 @@
 
 import { getUserIDs, getListenEvents, getSong } from './data.mjs';
 import {userSelect,resultsDiv} from './domelement.mjs';
-
+import { displayResult } from './common.mjs';
 
 // Populates the user selection dropdown with available user IDs.
  
