@@ -1,5 +1,5 @@
 
-import { getMostListened } from './mostListened.mjs';
+import { getMostListened } from './common.mjs';
 
 // Mock getSong
 jest.unstable_mockModule('./data.mjs', () => ({
