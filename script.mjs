@@ -7,7 +7,7 @@
 
 import { getUserIDs, getListenEvents, getSong } from './data.mjs';
 import {userSelect,resultsDiv} from './domelement.mjs';
-import { displayResult,getMostListened,getFridayNightListens } from './common.mjs';
+import { displayResult,getMostListened,getFridayNightListens,getLongestStreakSong} from './common.mjs';
 
 // Populates the user selection dropdown with available user IDs.
  
@@ -57,6 +57,39 @@ function renderResults(userID) {
     displayResult('friday-night-song-count',"What was the user’s most often listened to song on Friday nights (between 5pm and 4am)?",
         getMostListened(fridayNightEvents, 'song', false)
     );
+
+        // Q4 (cont.): Most often listened to artist (time)
+        displayResult('most-listened-artist-time',
+            "What was the user’s most often listened to artist (by listening time)?",
+            getMostListened(listenEvents, 'artist', true)
+        );
+    
+        // Q4 (cont.): Most often listened to song on Friday nights (time)
+        displayResult('friday-night-song-time',
+            "What was the user’s most often listened to song on Friday nights (between 5pm and 4am, by listening time)?",
+            getMostListened(fridayNightEvents, 'song', true)
+        );
+    
+        // Q5: Longest streak song
+        displayResult('longest-streak-song',
+            "What song did the user listen to the most times in a row? How many times was it listened to?",
+            getLongestStreakSong(listenEvents)
+        );
+    
+        // Q6: Every day songs
+        displayResult('every-day-songs',
+            "Are there any songs that, on each day the user listened to music, they listened to every day? If yes, show which one(s).",
+            getEveryDaySongs(listenEvents)
+        );
+
+
+        // Q7: Top three genres
+        const topGenresResult = getTopGenres(listenEvents);
+        if (topGenresResult) {
+        // We handle the dynamic "Top X genres" text inside getTopGenres
+        const [title, genresList] = topGenresResult.split(': ');
+        displayResult('top-genres', title + ':', genresList);
+    }
 
     
 

@@ -101,3 +101,75 @@ export function getFridayNightListens(events) {
     });
 }
 
+/**
+ * Calculates the song listened to the most times in a row.
+ * @param {Array<Object>} events - The listen events for a user.
+ * @returns {string|null} The song and its streak length, or null if no streak.
+ */
+export function getLongestStreakSong(events) {
+    if (events.length === 0) {
+        return null;
+    }
+
+    let maxStreak = 0;
+    let currentStreak = 0;
+    let longestStreakSongId = null;
+    let currentSongId = null;
+
+    let longestStreakSongs = []; // To handle ties
+
+    events.forEach(event => {
+        if (event.song_id === currentSongId) {
+            currentStreak++;
+        } else {
+            // Check if the previous streak was the longest
+            if (currentStreak > maxStreak) {
+                maxStreak = currentStreak;
+                longestStreakSongs = [{ song_id: currentSongId, count: maxStreak }];
+            } else if (currentStreak === maxStreak && maxStreak > 0) {
+                // If there's a tie, add to the list
+                longestStreakSongs.push({ song_id: currentSongId, count: maxStreak });
+            }
+            currentSongId = event.song_id;
+            currentStreak = 1; // Start new streak
+        }
+    });
+
+    // Check the last streak after loop finishes
+    if (currentStreak > maxStreak) {
+        maxStreak = currentStreak;
+        longestStreakSongs = [{ song_id: currentSongId, count: maxStreak }];
+    } else if (currentStreak === maxStreak && maxStreak > 0) {
+        longestStreakSongs.push({ song_id: currentSongId, count: maxStreak });
+    }
+
+    if (maxStreak === 0) { // No songs listened to or no streak
+        return null;
+    }
+
+    // Format the output for ties
+    if (longestStreakSongs.length > 1) {
+        const uniqueTitles = new Set();
+        const formattedTies = longestStreakSongs
+            .filter(item => {
+                const song = getSong(item.song_id);
+                const fullTitle = song ? `${song.title} - ${song.artist}` : 'Unknown Song';
+                if (!uniqueTitles.has(fullTitle)) {
+                    uniqueTitles.add(fullTitle);
+                    return true;
+                }
+                return false;
+            })
+            .map(item => {
+                const song = getSong(item.song_id);
+                return song ? `${song.title} - ${song.artist}` : 'Unknown Song';
+            });
+        return `Multiple songs tied with length ${maxStreak}: ${formattedTies.join(', ')}`;
+    } else if (longestStreakSongs.length === 1) {
+        const song = getSong(longestStreakSongs[0].song_id);
+        return song ? `${song.title} - ${song.artist} (length: ${maxStreak})` : 'Unknown Song (length: ${maxStreak})';
+    }
+
+    return null;
+}
+
