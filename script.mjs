@@ -7,7 +7,7 @@
 
 import { getUserIDs, getListenEvents, getSong } from './data.mjs';
 import {userSelect,resultsDiv} from './domelement.mjs';
-import { displayResult,getMostListened } from './common.mjs';
+import { displayResult,getMostListened,getFridayNightListens } from './common.mjs';
 
 // Populates the user selection dropdown with available user IDs.
  
@@ -49,6 +49,16 @@ function renderResults(userID) {
     displayResult('most-listened-artist-count',"What was the user’s most often listened to artist?",
             getMostListened(listenEvents, 'artist', false)
         );
+
+    // Filter for Friday night listens
+    const fridayNightEvents = getFridayNightListens(listenEvents);
+
+    // Q3: Most often listened to song on Friday nights (count)
+    displayResult('friday-night-song-count',"What was the user’s most often listened to song on Friday nights (between 5pm and 4am)?",
+        getMostListened(fridayNightEvents, 'song', false)
+    );
+
+    
 
     
 }

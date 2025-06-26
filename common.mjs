@@ -77,3 +77,27 @@ export function getMostListened(events, type, byTime) {
     return `${mostListenedItem}`;
 }
 
+
+/**
+ * Filters listen events for Friday nights (5 PM Friday to 4 AM Saturday).
+ * @param {Array<Object>} events - The listen events for a user.
+ * @returns {Array<Object>} Filtered listen events.
+ */
+export function getFridayNightListens(events) {
+    return events.filter(event => {
+        const date = new Date(event.timestamp);
+        const dayOfWeek = date.getUTCDay(); // 0 for Sunday, 5 for Friday, 6 for Saturday
+        const hour = date.getUTCHours(); // UTC hour (0-23)
+
+        // Friday from 5 PM UTC (17) onwards
+        if (dayOfWeek === 5 && hour >= 17) {
+            return true;
+        }
+        // Saturday from midnight (0) to 4 AM UTC (exclusive of 4:00:00)
+        if (dayOfWeek === 6 && hour >= 0 && hour < 4) {
+            return true;
+        }
+        return false;
+    });
+}
+
