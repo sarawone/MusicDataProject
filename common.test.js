@@ -1,29 +1,24 @@
-
 import { getMostListened } from './common.mjs';
 
 // Mock getSong
-jest.unstable_mockModule('./data.mjs', () => ({
-  getSong: (songID) => {
+import { getSong } from './data.mjs';
+
+jest.mock('./data.mjs', () => ({
+  getSong: (id) => {
     const songs = {
-      'song-1': { title: 'Song One', artist: 'Artist A', duration: 200 },
-      'song-2': { title: 'Song Two', artist: 'Artist B', duration: 180 }
+      'song-1': { title: 'Song A', artist: 'Artist X', duration_seconds: 180 },
+      'song-2': { title: 'Song B', artist: 'Artist Y', duration_seconds: 200 }
     };
-    return songs[songID] || null;
+    return songs[id];
   }
 }));
 
-const { getSong } = await import('./data.mjs');
-
-describe('getMostListened', () => {
-  test('returns most listened song by count', () => {
-    const listenEvents = [
-      { songID: 'song-1' },
-      { songID: 'song-1' },
-      { songID: 'song-2' },
-      { songID: 'song-1' }
-    ];
-
-    const result = getMostListened(listenEvents, 'song', false);
-    expect(result).toBe('Song One - Artist A');
-  });
+test('getMostListened returns most played song by count', () => {
+  const mockEvents = [
+    { song_id: 'song-1' },
+    { song_id: 'song-1' },
+    { song_id: 'song-2' }
+  ];
+  const result = getMostListened(mockEvents, 'song', false);
+  expect(result).toBe('Song A - Artist X');
 });
