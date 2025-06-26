@@ -44,6 +44,13 @@ function renderResults(userID) {
     displayResult('most-listened-song-count',"What was the user’s most often listened to song?",
             getMostListened(listenEvents, 'song', false)
         );
+
+     // Q2: Most often listened to artist (count)
+    displayResult('most-listened-artist-count',"What was the user’s most often listened to artist?",
+            getMostListened(listenEvents, 'artist', false)
+        );
+
+    
 }
 
 
