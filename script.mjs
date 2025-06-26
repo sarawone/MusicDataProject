@@ -7,7 +7,7 @@
 
 import { getUserIDs, getListenEvents, getSong } from './data.mjs';
 import {userSelect,resultsDiv} from './domelement.mjs';
-import { displayResult } from './common.mjs';
+import { displayResult,getMostListened } from './common.mjs';
 
 // Populates the user selection dropdown with available user IDs.
  
@@ -35,6 +35,15 @@ function renderResults(userID) {
         resultsDiv.innerHTML = '<p>This user didn’t listen to any songs.</p>';
         return;
     }
+    
+    // Use a definition list for semantic grouping of questions and answers
+    const dl = document.createElement('dl');
+    resultsDiv.appendChild(dl);
+    
+    // Q1: Most often listened to song (count)
+    displayResult('most-listened-song-count',"What was the user’s most often listened to song?",
+            getMostListened(listenEvents, 'song', false)
+        );
 }
 
 
@@ -47,5 +56,6 @@ userSelect.addEventListener('change', () => {
         
     
 });
+
 
 
