@@ -1,6 +1,4 @@
-// common.test.mjs
 
-// ✅ Step 1: Mock getSong from data.mjs BEFORE importing getMostListened
 jest.mock('./data.mjs', () => ({
   getSong: (id) => {
     const songs = {
@@ -12,10 +10,10 @@ jest.mock('./data.mjs', () => ({
   }
 }));
 
-// ✅ Step 2: Now import your logic function AFTER mock
+
 import { getMostListened } from './common.mjs';
 
-// ✅ Step 3: Write your tests
+
 describe('getMostListened', () => {
   test('returns most listened song by count', () => {
     const events = [
