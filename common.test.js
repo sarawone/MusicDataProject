@@ -1,4 +1,4 @@
-mport { getFridayNightListens } from './common.mjs';
+import { getFridayNightListens } from './common.mjs';
 
 test('filters Friday night listens correctly', () => {
   const events = [
