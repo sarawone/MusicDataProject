@@ -231,7 +231,7 @@ export function getEveryDaySongs(events) {
  * @param {Array<Object>} events - The listen events for a user.
  * @returns {string|null} A formatted string of top genres, or null if no genres.
  */
-function getTopGenres(events) {
+export function getTopGenres(events) {
     if (events.length === 0) {
         return null;
     }
