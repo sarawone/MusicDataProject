@@ -225,3 +225,42 @@ export function getEveryDaySongs(events) {
     return everyDaySongs.length > 0 ? everyDaySongs.join(', ') : null;
 }
 
+
+/**
+ * Calculates the top genres by number of listens.
+ * @param {Array<Object>} events - The listen events for a user.
+ * @returns {string|null} A formatted string of top genres, or null if no genres.
+ */
+function getTopGenres(events) {
+    if (events.length === 0) {
+        return null;
+    }
+    const genreCounts = new Map(); // Map: genre -> count
+    events.forEach(event => {
+        const song = getSong(event.song_id);
+        if (song && song.genre) {
+            genreCounts.set(song.genre, (genreCounts.get(song.genre) || 0) + 1);
+        }
+    });
+    if (genreCounts.size === 0) {
+        return null;
+    }
+    // Convert map to array, sort by count descending
+    const sortedGenres = Array.from(genreCounts.entries())
+        .sort((a, b) => b[1] - a[1]);
+    // Take top 3 or fewer if not available
+    const topGenres = sortedGenres.slice(0, 3).map(entry => entry[0]);
+    if (topGenres.length === 0) {
+        return null;
+    }
+    // Dynamically adjust the title based on the number of genres found
+    let title = "Top ";
+    if (topGenres.length === 1) {
+        title += "genre";
+    } else if (topGenres.length === 2) {
+        title += "2 genres";
+    } else { // topGenres.length === 3
+        title += "3 genres";
+    }
+    return `${title}: ${topGenres.join(', ')}`;
+}
