@@ -173,3 +173,55 @@ export function getLongestStreakSong(events) {
     return null;
 }
 
+/**
+ * Calculates songs listened to on every day the user listened to music.
+ * @param {Array<Object>} events - The listen events for a user.
+ * @returns {string|null} The list of songs, or null if none.
+ */
+export function getEveryDaySongs(events) {
+    if (events.length === 0) {
+        return null;
+    }
+
+    const songsByDay = new Map(); // Map: 'YYYY-MM-DD' -> Set<songId>
+    const allDaysListened = new Set(); // Set of all unique days a user listened to music
+
+    events.forEach(event => {
+        const date = new Date(event.timestamp);
+        // Format date to 'YYYY-MM-DD' (UTC to avoid timezone issues with 'day')
+        const dayString = date.toISOString().split('T')[0];
+
+        if (!songsByDay.has(dayString)) {
+            songsByDay.set(dayString, new Set());
+        }
+        songsByDay.get(dayString).add(event.song_id);
+        allDaysListened.add(dayString);
+    });
+
+    if (allDaysListened.size === 0) {
+        return null;
+    }
+
+    const potentialEveryDaySongs = new Map(); // Map: songId -> count of days listened
+
+    // Populate potentialEveryDaySongs
+    for (const [day, songIds] of songsByDay.entries()) {
+        songIds.forEach(songId => {
+            potentialEveryDaySongs.set(songId, (potentialEveryDaySongs.get(songId) || 0) + 1);
+        });
+    }
+
+    const everyDaySongs = [];
+    for (const [songId, dayCount] of potentialEveryDaySongs.entries()) {
+        // If the song was listened to on as many days as the user listened to music in total
+        if (dayCount === allDaysListened.size) {
+            const song = getSong(songId);
+            if (song) {
+                everyDaySongs.push(`${song.title} - ${song.artist}`);
+            }
+        }
+    }
+
+    return everyDaySongs.length > 0 ? everyDaySongs.join(', ') : null;
+}
+
