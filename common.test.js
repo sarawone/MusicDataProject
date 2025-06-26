@@ -1,7 +1,6 @@
-import { getMostListened } from './common.mjs';
+
 
 // Mock getSong
-import { getSong } from './data.mjs';
 
 jest.mock('./data.mjs', () => ({
   getSong: (id) => {
@@ -13,6 +12,7 @@ jest.mock('./data.mjs', () => ({
   }
 }));
 
+import { getMostListened } from './common.mjs';
 test('getMostListened returns most played song by count', () => {
   const mockEvents = [
     { song_id: 'song-1' },
